@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Chamados.Core.ViewModels;assembly=Chamados.Core"
+             xmlns:model="clr-namespace:Chamados.Core.Models;assembly=Chamados.Core"
+             x:Class="Chamados.Mobile.Views.DetalhesChamadoPage"
+             Title="Detalhes do Chamado">
+
+    <ContentPage.BindingContext>
+        <vm:DetalhesChamadoViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Detalhes do Chamado -->
+            <Frame Padding="15" CornerRadius="10" HasShadow="True" BackgroundColor="White">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="{Binding Chamado.Titulo}" FontSize="Large" FontAttributes="Bold" />
+                    <Label Text="{Binding Chamado.Descricao}" FontSize="Medium" TextColor="Gray" />
+                    <Label Text="{Binding Chamado.DataCriacaoFormatada, StringFormat='Aberto em: {0}'}" FontSize="Small" TextColor="LightGray" />
+                    
+                    <HorizontalStackLayout HorizontalOptions="Center" Margin="0, 10, 0, 0">
+                        <Label Text="{Binding Chamado.Status}" 
+                               FontSize="Medium" 
+                               FontAttributes="Bold"
+                               Padding="10, 5"
+                               TextColor="White"
+                               HorizontalOptions="Center">
+                            <Label.Background>
+                                <Binding Path="Chamado.Status">
+                                    <Binding.Converter>
+                                        <vm:StatusToColorConverter />
+                                    </Binding.Converter>
+                                </Binding>
+                            </Label.Background>
+                        </Label>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Comentários -->
+            <Label Text="{Binding Comentarios.Count, StringFormat='Comentários ({0})'}" FontSize="Medium" FontAttributes="Bold" Margin="0, 10, 0, 0" />
+            
+            <CollectionView ItemsSource="{Binding Comentarios}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Comentario">
+                        <Frame Padding="10" Margin="0, 5" CornerRadius="8" HasShadow="False" BackgroundColor="#F5F5F5">
+                            <VerticalStackLayout Spacing="5">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding NomeUsuario}" FontAttributes="Bold" />
+                                    <Label Text="{Binding DataCriacao, StringFormat='{0:dd/MM/yyyy - HH:mm}'}" FontSize="Small" TextColor="Gray" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Texto}" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Adicionar Comentário -->
+            <Frame Padding="15" CornerRadius="10" HasShadow="True" BackgroundColor="White" Margin="0, 10, 0, 0">
+                <VerticalStackLayout Spacing="10">
+                    <Editor Placeholder="Adicionar Comentário" 
+                            Text="{Binding NovoComentarioTexto}" 
+                            AutoSize="TextChanges" 
+                            HeightRequest="80" />
+                    
+                    <Button Text="Adicionar Comentário" 
+                            Command="{Binding AdicionarComentarioCommand}" 
+                            IsEnabled="{Binding IsNotBusy}"
+                            BackgroundColor="#007bff" 
+                            TextColor="White" 
+                            CornerRadius="10" 
+                            HeightRequest="50" />
+                </VerticalStackLayout>
+            </Frame>
+            
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

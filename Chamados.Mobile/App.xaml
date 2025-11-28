@@ -1,0 +1,40 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Chamados.Mobile"
+             x:Class="Chamados.Mobile.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#007bff</Color>
+            <Color x:Key="Secondary">#6c757d</Color>
+            <Color x:Key="Success">#28a745</Color>
+            <Color x:Key="Warning">#ffc107</Color>
+            <Color x:Key="Danger">#dc3545</Color>
+            <Color x:Key="Info">#17a2b8</Color>
+            <Color x:Key="Light">#f8f9fa</Color>
+            <Color x:Key="Dark">#343a40</Color>
+            <Color x:Key="Background">#F5F5F5</Color>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="8" />
+                <Setter Property="Padding" Value="10" />
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource Dark}" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="PlaceholderColor" Value="{StaticResource Secondary}" />
+            </Style>
+            
+            <!-- Estilo para o título das páginas -->
+            <Style TargetType="ContentPage">
+                <Setter Property="BackgroundColor" Value="{StaticResource Background}" />
+            </Style>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
