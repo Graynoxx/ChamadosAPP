@@ -1,0 +1,6 @@
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.csproj.AssemblyReference.cache
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.AssemblyInfoInputs.cache
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.AssemblyInfo.cs
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.csproj.CoreCompileInputs.cache
+/home/ubuntu/ChamadosApp/Chamados.Web/obj/Debug/net8.0/Chamados.Web.MvcApplicationPartsAssemblyInfo.cache

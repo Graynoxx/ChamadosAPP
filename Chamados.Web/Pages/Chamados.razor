@@ -1,0 +1,56 @@
+@page "/chamados"
+@inject ListaChamadosViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageTitle>Lista de Chamados</PageTitle>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Lista de Chamados</h3>
+        <a href="/novochamado" class="btn btn-success">Novo Chamado</a>
+    </div>
+
+    @if (ViewModel.IsBusy)
+    {
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Carregando...</span>
+            </div>
+        </div>
+    }
+    else if (ViewModel.Chamados.Count == 0)
+    {
+        <div class="alert alert-info">Nenhum chamado encontrado.</div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var chamado in ViewModel.Chamados)
+            {
+                <a href="/chamados/@chamado.Id" class="list-group-item list-group-item-action flex-column align-items-start mb-2">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@chamado.Titulo</h5>
+                        <span class="badge @GetStatusBadgeClass(chamado.Status)">@chamado.Status</span>
+                    </div>
+                    <p class="mb-1">Categoria: @chamado.Categoria</p>
+                    <small>@chamado.DataCriacaoFormatada</small>
+                </a>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadChamadosAsync();
+    }
+
+    private string GetStatusBadgeClass(string status) => status switch
+    {
+        "ABERTO" => "bg-primary",
+        "EM ANDAMENTO" => "bg-warning text-dark",
+        "RESOLVIDO" => "bg-success",
+        _ => "bg-secondary"
+    };
+}

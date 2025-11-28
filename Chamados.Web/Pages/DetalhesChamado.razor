@@ -1,0 +1,109 @@
+@page "/chamados/{ChamadoId:int}"
+@inject DetalhesChamadoViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageTitle>Detalhes do Chamado</PageTitle>
+
+@if (ViewModel.IsBusy && ViewModel.Chamado == null)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+    </div>
+}
+else if (ViewModel.Chamado == null)
+{
+    <div class="alert alert-danger">Chamado não encontrado.</div>
+}
+else
+{
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Detalhes do Chamado</h3>
+            <button class="btn btn-secondary" @onclick="() => Navigation.NavigateTo("/chamados")">Voltar</button>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title">@ViewModel.Chamado.Titulo</h4>
+                <p class="card-text">@ViewModel.Chamado.Descricao</p>
+                <span class="badge @GetStatusBadgeClass(ViewModel.Chamado.Status)">@ViewModel.Chamado.Status</span>
+            </div>
+        </div>
+
+        <h5>Comentários (@ViewModel.Comentarios.Count)</h5>
+        <div class="list-group mb-4">
+            @foreach (var comentario in ViewModel.Comentarios.OrderBy(c => c.DataCriacao))
+            {
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">@comentario.NomeUsuario</h6>
+                        <small>@comentario.DataCriacao.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+                    <p class="mb-1">@comentario.Texto</p>
+                </div>
+            }
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Adicionar Comentário</h5>
+                <EditForm Model="@ViewModel" OnValidSubmit="HandleAddComentario">
+                    <div class="form-group mb-3">
+                        <InputTextArea class="form-control" @bind-Value="ViewModel.NovoComentarioTexto" rows="3" placeholder="Digite seu comentário aqui..." />
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">@ViewModel.ErrorMessage</div>
+                    }
+
+                    <button type="submit" class="btn btn-primary" disabled="@ViewModel.IsBusy">
+                        @if (ViewModel.IsBusy)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Enviando...
+                        }
+                        else
+                        {
+                            <span>Adicionar Comentário</span>
+                        }
+                    </button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int ChamadoId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.LoadChamadoAsync(ChamadoId);
+    }
+
+    private async Task HandleAddComentario()
+    {
+        // Em um app real, o ID e Nome do usuário viriam do estado de autenticação.
+        int usuarioIdSimulado = 1;
+        string nomeUsuarioSimulado = "Usuário Logado";
+
+        var sucesso = await ViewModel.AdicionarComentarioAsync(usuarioIdSimulado, nomeUsuarioSimulado);
+        if (sucesso)
+        {
+            // Força a atualização da UI para mostrar o novo comentário
+            StateHasChanged();
+        }
+    }
+
+    private string GetStatusBadgeClass(string status) => status switch
+    {
+        "ABERTO" => "bg-primary",
+        "EM ANDAMENTO" => "bg-warning text-dark",
+        "RESOLVIDO" => "bg-success",
+        _ => "bg-secondary"
+    };
+}

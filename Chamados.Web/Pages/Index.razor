@@ -1,0 +1,12 @@
+@page "/"
+@inject NavigationManager Navigation
+
+<PageTitle>Home</PageTitle>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Redireciona para a página de Login ao iniciar
+        Navigation.NavigateTo("/login");
+    }
+}

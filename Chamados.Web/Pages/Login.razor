@@ -1,0 +1,60 @@
+@page "/login"
+@inject LoginViewModel ViewModel
+@inject NavigationManager Navigation
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3>Login</h3>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@ViewModel" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <InputText id="email" class="form-control" @bind-Value="ViewModel.Email" />
+                            <ValidationMessage For="@(() => ViewModel.Email)" />
+                        </div>
+                        <div class="form-group">
+                            <label for="senha">Senha</label>
+                            <InputText id="senha" type="password" class="form-control" @bind-Value="ViewModel.Senha" />
+                            <ValidationMessage For="@(() => ViewModel.Senha)" />
+                        </div>
+                        
+                        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+                        {
+                            <div class="alert alert-danger mt-3">@ViewModel.ErrorMessage</div>
+                        }
+
+                        <button type="submit" class="btn btn-primary btn-block mt-3" disabled="@ViewModel.IsBusy">
+                            @if (ViewModel.IsBusy)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Carregando...
+                            }
+                            else
+                            {
+                                <span>Entrar</span>
+                            }
+                        </button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private async Task HandleLogin()
+    {
+        var usuario = await ViewModel.LoginAsync();
+        if (usuario != null)
+        {
+            // Em um app real, o estado de autenticação seria gerenciado aqui.
+            // Por enquanto, apenas redirecionamos para a lista de chamados.
+            Navigation.NavigateTo("/chamados");
+        }
+    }
+}

@@ -1,0 +1,78 @@
+@page "/novochamado"
+@inject NovoChamadoViewModel ViewModel
+@inject NavigationManager Navigation
+
+<PageTitle>Novo Chamado</PageTitle>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-5">
+                <div class="card-header">
+                    <h3>Novo Chamado</h3>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@ViewModel" OnValidSubmit="HandleSubmit">
+                        <DataAnnotationsValidator />
+                        
+                        <div class="form-group mb-3">
+                            <label for="titulo">Título do Chamado</label>
+                            <InputText id="titulo" class="form-control" @bind-Value="ViewModel.Titulo" placeholder="Ex: Problema com a internet" />
+                            <ValidationMessage For="@(() => ViewModel.Titulo)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="descricao">Descrição</label>
+                            <InputTextArea id="descricao" class="form-control" @bind-Value="ViewModel.Descricao" placeholder="Detalhe o problema ou solicitação aqui..." rows="5" />
+                            <ValidationMessage For="@(() => ViewModel.Descricao)" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="categoria">Categoria</label>
+                            <InputSelect id="categoria" class="form-control" @bind-Value="ViewModel.Categoria">
+                                <option value="">Selecione da categoria...</option>
+                                @foreach (var cat in ViewModel.CategoriasDisponiveis)
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => ViewModel.Categoria)" />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(ViewModel.ErrorMessage))
+                        {
+                            <div class="alert alert-danger mt-3">@ViewModel.ErrorMessage</div>
+                        }
+
+                        <button type="submit" class="btn btn-primary btn-block mt-3" disabled="@ViewModel.IsBusy">
+                            @if (ViewModel.IsBusy)
+                            {
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Enviando...
+                            }
+                            else
+                            {
+                                <span>Enviar Chamado</span>
+                            }
+                        </button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private async Task HandleSubmit()
+    {
+        // Em um app real, o ID do usuário viria do estado de autenticação.
+        // Usaremos um ID fixo para simulação.
+        int usuarioIdSimulado = 1; 
+        
+        var chamado = await ViewModel.EnviarChamadoAsync(usuarioIdSimulado);
+        if (chamado != null)
+        {
+            Navigation.NavigateTo("/chamados");
+        }
+    }
+}
